@@ -56,7 +56,7 @@ export const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <span className="link">De Cifris IXH24 Hackathon</span>
+                <span className="link">IXH24</span>
               </a>
             </div>
             <span>·</span>
