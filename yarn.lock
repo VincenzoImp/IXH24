@@ -2139,7 +2139,6 @@ __metadata:
     blo: ~1.2.0
     burner-connector: ~0.0.8
     daisyui: 4.12.10
-    dotenv: ^16.4.5
     eslint: ~8.57.1
     eslint-config-next: ~14.2.15
     eslint-config-prettier: ~8.10.0
