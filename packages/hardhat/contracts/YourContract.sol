@@ -63,12 +63,15 @@ contract YourContract {
     // Constructor to set default values for univNumber, electionDuration, and election status
     constructor() {
         // Hardcoded university addresses
-        universities.push(0x6044f21C9A63c70b0E694c3403A8247C2571De2a);
-        universities.push(0x7fE6d8A75cc46A3f28DbdafC180eA86330d3bA67);
-        universities.push(0x9a7b2A38FeC15Bc72b8f75027EE4d6089765c0ff);
-        isUniversity[0x6044f21C9A63c70b0E694c3403A8247C2571De2a] = true;
-        isUniversity[0x7fE6d8A75cc46A3f28DbdafC180eA86330d3bA67] = true;
-        isUniversity[0x9a7b2A38FeC15Bc72b8f75027EE4d6089765c0ff] = true;
+        universities.push(0xD5A77B2dc5425A0fEe17378A4ff4EF21Fea86426);
+        universities.push(0x515509DDa4d8e81a90211b5a98e208a908b6Ad47);
+        universities.push(0x8a4A043F9fe15880Ce92a78e2ED32384aAEeaB49);
+        isUniversity[0xD5A77B2dc5425A0fEe17378A4ff4EF21Fea86426] = true;
+        isUniversity[0x515509DDa4d8e81a90211b5a98e208a908b6Ad47] = true;
+        isUniversity[0x8a4A043F9fe15880Ce92a78e2ED32384aAEeaB49] = true;
+        universityProfessors[0xD5A77B2dc5425A0fEe17378A4ff4EF21Fea86426] = 10;
+        universityProfessors[0x515509DDa4d8e81a90211b5a98e208a908b6Ad47] = 10;
+        universityProfessors[0x8a4A043F9fe15880Ce92a78e2ED32384aAEeaB49] = 10;
 
         // Maximum number of professors allowed per university
         CAP = 30;

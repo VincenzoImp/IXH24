@@ -40,9 +40,6 @@ const Home: NextPage = () => {
     
 
 
-
-
-
     function NoEnrolledUser() {
       // Function to handle when university is selected
       const handleUniversityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -205,6 +202,7 @@ const Home: NextPage = () => {
       );
 
     }
+
 
     function UniState2() {
       return (
