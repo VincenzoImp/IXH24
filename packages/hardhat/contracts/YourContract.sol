@@ -5,11 +5,17 @@ contract YourContract {
     // Mapping to track the number of professors in a university
     mapping(address => uint256) public universityProfessors;
 
+    mapping(address=> bool) public isUniversity;
+
+    // Mapping to track the votes of universities (key is university address, value is their vote as a string)
+    mapping(address => string) public universityVotes;
+
+
     // Mapping to associate a professor's address with their university
     mapping(address => address) public professorToUniversity;
 
     // Maximum number of professors allowed per university
-    uint256 public constant CAP = 2;
+    uint256 public constant CAP = 30;
 
     // Enum to represent the status of the presidential election
     enum VoteStatus { NO_ELECTION, IN_PROGRESS, CLOSED }
@@ -38,7 +44,7 @@ contract YourContract {
     // Mapping to track which universities have voted
     mapping(address => bool) public universitiesVoted;
 
-    // List of all university addresses (used to check voting status)
+    // List of all university addresses
     address[] public universities;
 
     // Event to log when a university votes
@@ -56,7 +62,16 @@ contract YourContract {
 
     // Constructor to set default values for universityCount, electionDuration, and election status
     constructor() {
-        universityCount = 100;  // Default number of universities
+        // Hardcoded university addresses
+        universities.push(0x7fE6d8A75cc46A3f28DbdafC180eA86330d3bA67);
+        universities.push(0x6044f21C9A63c70b0E694c3403A8247C2571De2a);
+        universities.push(0x9a7b2A38FeC15Bc72b8f75027EE4d6089765c0ff);
+        isUniversity[0x7fE6d8A75cc46A3f28DbdafC180eA86330d3bA67] = true;
+        isUniversity[0x6044f21C9A63c70b0E694c3403A8247C2571De2a] = true;
+        isUniversity[0x9a7b2A38FeC15Bc72b8f75027EE4d6089765c0ff] = true;
+
+
+        universityCount = universities.length;  // Total number of hardcoded universities
         electionDurationInBlocks = 10000;  // Default election duration in blocks
         VOTE_STATUS = VoteStatus.NO_ELECTION;  // Initial election status is "no election"
         votedUniversitiesCount = 0;  // Initially, no universities have voted
@@ -74,17 +89,17 @@ contract YourContract {
         _;
     }
 
-    // Modifier to restrict access to only the university that started the election
-    modifier onlyUniversity() {
-        require(msg.sender == universityAddress, "Only the university can call this function.");
+
+    // Modifier to allow actions only for hardcoded universities
+    modifier onlyUniversities(address addr) {
+        bool isAllowed = isUniversity[addr];
+        require(isAllowed, "Sender is not a recognized university.");
         _;
     }
 
     // Function to enroll the professor (sender) in a university and pay the enrollment fee
-    function enrollProfessor(address university) external payable onlyWhenNoElection {
+    function enrollProfessor(address university) external payable onlyWhenNoElection onlyUniversities(university) {
         address professor = msg.sender; // Use the msg.sender as the professor address
-        require(professor != address(0), "Professor address cannot be zero.");
-        require(university != address(0), "University address cannot be zero.");
         require(professorToUniversity[professor] == address(0), "Professor is already enrolled in a university.");
         require(universityProfessors[university] < CAP, "University has reached the maximum capacity of professors.");
         require(msg.value == ENROLLMENT_FEE, "Incorrect enrollment fee.");
@@ -105,27 +120,8 @@ contract YourContract {
         emit ProfessorEnrolled(professor, university, universityProfessors[university], msg.value);
     }
 
-    // Function to remove a professor from their university and refund the enrollment fee
-    function removeProfessor() external onlyWhenNoElection {
-        address professor = msg.sender; // Use the msg.sender as the professor address
-        address university = professorToUniversity[professor];
-        require(university != address(0), "Professor is not enrolled in any university.");
-
-        // Remove the professor from the university
-        professorToUniversity[professor] = address(0);
-
-        // Decrement the count of professors in the university
-        universityProfessors[university] -= 1;
-
-        // Refund the enrollment fee to the professor
-        payable(professor).transfer(ENROLLMENT_FEE);
-
-        // Emit an event for the removal
-        emit ProfessorRemoved(professor, university, universityProfessors[university], ENROLLMENT_FEE);
-    }
-
     // Function to start the election (called by the university)
-    function startVotation() external payable onlyWhenNoElection {
+    function startVotation() external payable onlyWhenNoElection onlyUniversities(msg.sender) {
         require(msg.value == ELECTION_START_FEE, "Incorrect election start fee.");
         
         // Change the election status to IN_PROGRESS
@@ -142,20 +138,21 @@ contract YourContract {
 
         // Set the university that started the election
         universityAddress = msg.sender;
-
-        // Add the university to the universities array
-        universities.push(msg.sender);
     }
 
-    // Function to vote by university (only during election)
-    function vote() external onlyDuringElection {
+    // Modified vote function to accept a string input
+    function vote(string memory voteData) external onlyDuringElection onlyUniversities(msg.sender) {
         address university = msg.sender;
         
         require(!universitiesVoted[university], "University has already voted.");
-        
+        require(bytes(voteData).length > 0, "Vote data cannot be empty."); // Ensure the vote string is not empty
+
         // Mark the university as having voted
         universitiesVoted[university] = true;
-        
+
+        // Save the vote data
+        universityVotes[university] = voteData;
+
         // Increment the count of universities that have voted
         votedUniversitiesCount++;
 
@@ -165,6 +162,24 @@ contract YourContract {
         // Check if the election should end
         checkElectionStatus();
     }
+
+   function removeProfessor(address professor) external onlyWhenNoElection {
+        address university = professorToUniversity[professor]; // Get the university associated with the professor
+        require(university != address(0), "Professor is not enrolled in any university.");
+        require(msg.sender == university, "Only the associated university can remove this professor.");
+
+        // Decrease the count of professors in the university
+        universityProfessors[university] -= 1;
+
+        // Remove the professor's association with the university
+        professorToUniversity[professor] = address(0);
+
+        // Emit an event for the removal
+        emit ProfessorRemoved(professor, university, universityProfessors[university], ENROLLMENT_FEE);
+    }
+
+
+
 
     // Function to check if the election is over by either reaching the CAP or deadline
     function checkElectionStatus() public {
@@ -180,35 +195,4 @@ contract YourContract {
             emit VoteStatusChanged(VOTE_STATUS); // Emit event when election is closed
         }
     }
-
-    // Function to get the number of universities that voted
-    function getVoteCount() external view returns (uint256) {
-        return votedUniversitiesCount;
-    }
-
-    // Function to get the number of professors in a university
-    function getNumberOfProfessors(address university) external view returns (uint256) {
-        return universityProfessors[university];
-    }
-
-    // Function to get the university a professor is enrolled in
-    function getUniversityOfProfessor(address professor) external view returns (address) {
-        return professorToUniversity[professor];
-    }
-
-    // Function to get the current election status
-    function getVoteStatus() external view returns (VoteStatus) {
-        return VOTE_STATUS;
-    }
-
-    // Function to get the election duration in blocks
-    function getElectionDurationInBlocks() external view returns (uint256) {
-        return electionDurationInBlocks;
-    }
-
-    // Function to get the block number when the election ends
-    function getElectionEndBlock() external view returns (uint256) {
-        return electionEndBlock;
-    }
 }
-

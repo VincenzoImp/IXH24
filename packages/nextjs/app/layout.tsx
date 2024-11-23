@@ -3,8 +3,16 @@ import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithPro
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
+// import { publicKey, privateKey, encrypt, decrypt } from "~~/crypto/fhe";
 
 export const metadata = getMetadata({ title: "IXH24", description: "Powered by Ripple & De Cifris" });
+
+// const x = BigInt(123456789);
+// const x_encrypted = await encrypt(publicKey, x);
+// const x_decrypted = await decrypt(privateKey, x_encrypted);
+// console.log("x:", x);
+// console.log("x_encrypted:", x_encrypted);
+// console.log("x_decrypted:", x_decrypted);
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (

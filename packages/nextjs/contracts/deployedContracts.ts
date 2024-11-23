@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     YourContract: {
-      address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
           inputs: [],
@@ -245,90 +245,19 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [],
-          name: "getElectionDurationInBlocks",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "getElectionEndBlock",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
           inputs: [
             {
               internalType: "address",
-              name: "university",
-              type: "address",
-            },
-          ],
-          name: "getNumberOfProfessors",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "professor",
-              type: "address",
-            },
-          ],
-          name: "getUniversityOfProfessor",
-          outputs: [
-            {
-              internalType: "address",
               name: "",
               type: "address",
             },
           ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "getVoteCount",
+          name: "isUniversity",
           outputs: [
             {
-              internalType: "uint256",
+              internalType: "bool",
               name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "getVoteStatus",
-          outputs: [
-            {
-              internalType: "enum YourContract.VoteStatus",
-              name: "",
-              type: "uint8",
+              type: "bool",
             },
           ],
           stateMutability: "view",
@@ -354,7 +283,13 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [],
+          inputs: [
+            {
+              internalType: "address",
+              name: "professor",
+              type: "address",
+            },
+          ],
           name: "removeProfessor",
           outputs: [],
           stateMutability: "nonpayable",
@@ -451,7 +386,32 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [],
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "universityVotes",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "voteData",
+              type: "string",
+            },
+          ],
           name: "vote",
           outputs: [],
           stateMutability: "nonpayable",
