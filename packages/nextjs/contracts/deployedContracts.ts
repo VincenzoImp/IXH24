@@ -124,6 +124,19 @@ const deployedContracts = {
           anonymous: false,
           inputs: [
             {
+              indexed: false,
+              internalType: "enum YourContract.Status",
+              name: "newStatus",
+              type: "uint8",
+            },
+          ],
+          name: "StatusChanged",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
               indexed: true,
               internalType: "address",
               name: "university",
@@ -131,19 +144,6 @@ const deployedContracts = {
             },
           ],
           name: "UniversityVoted",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: false,
-              internalType: "enum YourContract.VoteStatus",
-              name: "newStatus",
-              type: "uint8",
-            },
-          ],
-          name: "VoteStatusChanged",
           type: "event",
         },
         {
@@ -190,7 +190,7 @@ const deployedContracts = {
           name: "VOTE_STATUS",
           outputs: [
             {
-              internalType: "enum YourContract.VoteStatus",
+              internalType: "enum YourContract.Status",
               name: "",
               type: "uint8",
             },
@@ -200,7 +200,33 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "checkElectionStatus",
+          name: "WINNER",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "checkStatus",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "winningVote",
+              type: "string",
+            },
+          ],
+          name: "close",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
@@ -252,6 +278,25 @@ const deployedContracts = {
               type: "address",
             },
           ],
+          name: "hasVoted",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
           name: "isUniversity",
           outputs: [
             {
@@ -283,13 +328,7 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [
-            {
-              internalType: "address",
-              name: "professor",
-              type: "address",
-            },
-          ],
+          inputs: [],
           name: "removeProfessor",
           outputs: [],
           stateMutability: "nonpayable",
@@ -300,6 +339,19 @@ const deployedContracts = {
           name: "startVotation",
           outputs: [],
           stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "univNumber",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -322,25 +374,6 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          name: "universitiesVoted",
-          outputs: [
-            {
-              internalType: "bool",
-              name: "",
-              type: "bool",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
           inputs: [],
           name: "universityAddress",
           outputs: [
@@ -348,19 +381,6 @@ const deployedContracts = {
               internalType: "address",
               name: "",
               type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "universityCount",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
             },
           ],
           stateMutability: "view",
@@ -388,25 +408,6 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          name: "universityVotes",
-          outputs: [
-            {
-              internalType: "string",
-              name: "",
-              type: "string",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
               internalType: "string",
               name: "voteData",
               type: "string",
@@ -418,8 +419,27 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "votesMap",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [],
-          name: "votedUniversitiesCount",
+          name: "votesNumber",
           outputs: [
             {
               internalType: "uint256",
