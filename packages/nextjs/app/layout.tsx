@@ -20,9 +20,9 @@ import "~~/styles/globals.css";
 // console.log("sum_decrypted:", sum_decrypted);
 
 export const universities: Record<string, string> = {
-  '0xD5A77B2dc5425A0fEe17378A4ff4EF21Fea86426': 'Universita\' Sapienza',
-  '0x515509DDa4d8e81a90211b5a98e208a908b6Ad47': 'Universita\' Roma Tre',
-  '0x8a4A043F9fe15880Ce92a78e2ED32384aAEeaB49': 'Universita\' della Strada'
+  '0x904362203af32398c5F50E1Ac9C9F1e164888cE9': 'Universita\' Sapienza',
+  '0xA4dB1a53a8b538462F66dEAed1B73375357F602a': 'Universita\' Roma Tre',
+  '0x481709C180f3B285618ddfdBCf51ecc3Be6999eB': 'Universita\' della Strada'
 }
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
